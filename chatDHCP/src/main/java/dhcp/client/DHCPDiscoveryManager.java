@@ -174,35 +174,40 @@ public class DHCPDiscoveryManager {
             InetAddress localHost = InetAddress.getLocalHost();
             String localIP = localHost.getHostAddress();
             
+            log("IP locale détectée: " + localIP);
+            
             // Extraire le préfixe réseau (suppose /24)
             String[] parts = localIP.split("\\.");
-            String networkPrefix = parts[0] + "." + parts[1] + "." + parts[2] + ".";
-            
-            log("Scan du réseau " + networkPrefix + "1-254");
-            
-            // Ajouter les serveurs connus d'abord
-            addresses.addAll(knownServers);
-            
-            // Scanner quelques adresses communes (optimisation)
-            String[] commonAddresses = {"1", "2", "10", "100", "200", "254"};
-            for (String suffix : commonAddresses) {
-                String address = networkPrefix + suffix;
-                if (!addresses.contains(address)) {
-                    addresses.add(address);
+            if (parts.length == 4) {
+                String networkPrefix = parts[0] + "." + parts[1] + "." + parts[2] + ".";
+                
+                log("Scan du réseau " + networkPrefix + "1-254");
+                
+                // Ajouter les serveurs connus d'abord
+                addresses.addAll(knownServers);
+                
+                // Scanner quelques adresses communes ET la plage complète
+                for (int i = 1; i <= 254; i++) {
+                    String address = networkPrefix + i;
+                    if (!addresses.contains(address)) {
+                        addresses.add(address);
+                    }
                 }
             }
             
             // Ajouter l'adresse locale (pour les tests)
-            addresses.add("localhost");
-            addresses.add("127.0.0.1");
+            if (!addresses.contains("localhost")) addresses.add("localhost");
+            if (!addresses.contains("127.0.0.1")) addresses.add("127.0.0.1");
             
         } catch (Exception e) {
             log("Erreur lors du scan réseau: " + e.getMessage());
             // Fallback sur les adresses par défaut
             addresses.add("localhost");
+            addresses.add("127.0.0.1");
             addresses.addAll(knownServers);
         }
         
+        log("Adresses à scanner: " + addresses.size());
         return addresses;
     }
     
