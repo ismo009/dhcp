@@ -9,7 +9,6 @@ import java.net.Socket;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -50,7 +49,6 @@ public class DHCPDiscoveryManager {
      */
     public List<OfferMessage> discoverWithBroadcast() {
         List<OfferMessage> offers = new ArrayList<>();
-        CountDownLatch latch = new CountDownLatch(1);
         
         try {
             log("Démarrage de la découverte broadcast...");

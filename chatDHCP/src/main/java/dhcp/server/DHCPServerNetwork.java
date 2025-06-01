@@ -1,13 +1,22 @@
 package dhcp.server;
 
-import dhcp.messages.*;
-import java.io.*;
-import java.net.*;
-import java.time.LocalDateTime;
-import java.util.Properties;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Collections;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import dhcp.messages.DHCPMessage;
+import dhcp.messages.DiscoverMessage;
+import dhcp.messages.RequestMessage;
 
 /**
  * Serveur DHCP avec support réseau
@@ -26,18 +35,22 @@ public class DHCPServerNetwork extends DHCPServer {
     /**
      * Démarre le serveur réseau
      */
-    public void startNetworkServer(String configFile) throws IOException {
+    public void startNetworkServer(String configFile) throws Exception {
         // Initialiser la configuration
         initialize(configFile);
         
         // Utiliser un port alternatif pour les tests (pas besoin de droits admin)
         port = 6767;
         
-        serverSocket = new ServerSocket(port);
-        running = true;
+        // Détecter automatiquement l'adresse IP locale
+        String serverIP = getLocalNetworkIP();
+        System.out.println("Adresse IP détectée automatiquement: " + serverIP);
         
+        // Utiliser cette IP au lieu de l'IP codée en dur
+        serverSocket = new ServerSocket(port, 50, InetAddress.getByName(serverIP));
+    
         System.out.println("Serveur DHCP démarré sur le port " + port);
-        System.out.println("Adresse du serveur: " + InetAddress.getLocalHost().getHostAddress());
+        System.out.println("Adresse du serveur: " + serverIP);
         System.out.println("En attente de clients...\n");
         
         // Thread pour l'interface de commande
@@ -174,5 +187,23 @@ public class DHCPServerNetwork extends DHCPServer {
         } catch (IOException e) {
             System.err.println("Erreur lors de l'arrêt du serveur: " + e.getMessage());
         }
+    }
+    
+    private String getLocalNetworkIP() throws Exception {
+        // Obtenir toutes les interfaces réseau
+        for (NetworkInterface ni : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+            if (ni.isUp() && !ni.isLoopback()) {
+                for (InetAddress addr : Collections.list(ni.getInetAddresses())) {
+                    if (addr instanceof Inet4Address && !addr.isLoopbackAddress()) {
+                        String ip = addr.getHostAddress();
+                        // Préférer les adresses du réseau local
+                        if (ip.startsWith("192.168.") || ip.startsWith("10.") || ip.startsWith("172.")) {
+                            return ip;
+                        }
+                    }
+                }
+            }
+        }
+        return InetAddress.getLocalHost().getHostAddress();
     }
 }
