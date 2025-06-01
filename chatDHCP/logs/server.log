@@ -1,0 +1,13 @@
+# DHCP Server Log
+
+This log file records server activities and events related to the DHCP server operations. It will be populated with log entries as the server processes DHCP messages and manages IP address allocations.
+
+# Example Log Entries
+# [INFO] 2024-09-01 10:00:00 - DHCP Server started.
+# [INFO] 2024-09-01 10:00:05 - Received DISCOVER from client ID: 01:23:45:67:89:AB
+# [INFO] 2024-09-01 10:00:05 - Offering IP address 192.168.1.10 to client ID: 01:23:45:67:89:AB
+# [INFO] 2024-09-01 10:00:10 - Received REQUEST from client ID: 01:23:45:67:89:AB for IP 192.168.1.10
+# [INFO] 2024-09-01 10:00:10 - ACK sent for IP address 192.168.1.10 to client ID: 01:23:45:67:89:AB
+# [INFO] 2024-09-01 10:05:00 - Lease for IP address 192.168.1.10 will expire in 300 seconds.
+
+# Note: This file is intentionally left blank for now.

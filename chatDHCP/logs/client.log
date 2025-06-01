@@ -1,0 +1,19 @@
+# Client log for DHCP activities
+# This log records the activities and events related to the DHCP client.
+# Each entry should include a timestamp, the type of event, and any relevant details.
+
+2024-09-01 10:00:00 - DHCP Client started.
+2024-09-01 10:00:01 - Sending DISCOVER message to find available DHCP servers.
+2024-09-01 10:00:02 - Received OFFER message from server with IP: 192.168.1.10, Lease Time: 3600 seconds.
+2024-09-01 10:00:03 - Sending REQUEST message to server for IP: 192.168.1.10.
+2024-09-01 10:00:04 - Received ACK message from server confirming IP allocation: 192.168.1.10.
+2024-09-01 10:00:05 - DHCP Client configured with IP: 192.168.1.10, Lease Time: 3600 seconds.
+2024-09-01 10:00:06 - Lease will expire in 1800 seconds. Sending REQUEST for renewal.
+2024-09-01 10:00:07 - Received ACK message from server confirming lease renewal for IP: 192.168.1.10.
+2024-09-01 10:30:00 - Lease for IP: 192.168.1.10 is about to expire. Preparing to send DISCOVER for new IP.
+2024-09-01 10:30:01 - Sending DISCOVER message to find available DHCP servers.
+2024-09-01 10:30:02 - Received OFFER message from server with IP: 192.168.1.11, Lease Time: 3600 seconds.
+2024-09-01 10:30:03 - Sending REQUEST message to server for IP: 192.168.1.11.
+2024-09-01 10:30:04 - Received ACK message from server confirming IP allocation: 192.168.1.11.
+2024-09-01 10:30:05 - DHCP Client configured with new IP: 192.168.1.11, Lease Time: 3600 seconds.
+2024-09-01 10:30:06 - Client shutting down.
